@@ -1,0 +1,2 @@
+-e ../core-mcp
+-e ../ai-contained-provider-template

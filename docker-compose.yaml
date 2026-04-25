@@ -4,7 +4,7 @@ services:
       context: .
     user: "${USER_ID:?USER_ID not set - run via ai-contained.sh}:${GROUP_ID:?GROUP_ID not set - run via ai-contained.sh}"
     volumes:
-      - "${WORKSPACE:?WORKSPACE not set - run via ai-contained.sh}:/workspace"
+      - "${WORKSPACE:?WORKSPACE not set - run via ai-contained.sh}:/ai_contained"
     networks:
       - ai-contained
 
@@ -22,7 +22,8 @@ services:
     networks:
       - ai-contained
     depends_on:
-      - ai-contained
+      ai-contained:
+        condition: service_healthy
     # entrypoint is used instead of command so that additional args (e.g. --resume)
     # passed via `docker compose run` are appended rather than replacing the MCP config
     entrypoint:

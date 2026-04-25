@@ -6,7 +6,7 @@ services:
     environment:
       ALLOWED_PROVIDERS: "shell"
     volumes:
-      - "${WORKSPACE:?WORKSPACE not set - run via ai-contained.sh}:/workspace:ro"
+      - "${WORKSPACE:?WORKSPACE not set - run via ai-contained.sh}:/ai_contained:ro"
     networks:
       - ai-contained
 
@@ -17,7 +17,7 @@ services:
     environment:
       DENIED_PROVIDERS: "shell"
     volumes:
-      - "${WORKSPACE:?WORKSPACE not set - run via ai-contained.sh}:/workspace"
+      - "${WORKSPACE:?WORKSPACE not set - run via ai-contained.sh}:/ai_contained"
     networks:
       - ai-contained
 
@@ -35,8 +35,10 @@ services:
     networks:
       - ai-contained
     depends_on:
-      - ai-contained
-      - ai-contained-shell
+      ai-contained:
+        condition: service_healthy
+      ai-contained-shell:
+        condition: service_healthy
     # entrypoint is used instead of command so that additional args (e.g. --resume)
     # passed via `docker compose run` are appended rather than replacing the MCP config
     entrypoint:
